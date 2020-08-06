@@ -1,0 +1,295 @@
+<HTML>
+
+<head>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+</head>
+
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+    <script>
+    var clipboard = new Clipboard('.btn');
+
+    clipboard.on('success', function(e) {
+        console.log(e);
+    });
+
+    clipboard.on('error', function(e) {
+        console.log(e);
+    });
+    </script>
+
+
+<H1>Part 2: Lunar Descent</H1>
+
+<p>If you have finished tinkering with the <a href="../planetoids/planetoids.html">Planetoids lab</a> you can continue with this lab where <b>we will now add gravity to the game!</b> You have a little ship that you must fly around and land safely on the moon. If you approach the landing too fast you will crash the ship.
+
+<p>This example will use a programming language that is practically indistinguishable from C and C++ programming. (Note: If you are familiar with C or C++ the main difference you will see is that there is no main() function and instead the draw() function serves this role.)
+
+<p>The code is designed to solve the kinematic equations relevant to this case. 
+
+$$\sum F_{\rm{net},x} = F_{\rm thrust} \cos \theta = m \, a_x$$
+
+$$\sum F_{\rm{net},y} = F_{\rm thrust} \sin \theta - m g = m \, a_y$$
+
+$$ \Delta v_x = a_x \Delta t$$
+
+$$ \Delta v_y = a_y \Delta t$$
+
+$$ v_x = v_{x0} + \Delta v_x$$
+
+$$ v_y = v_{y0} + \Delta v_y$$
+
+$$ x = x_0 + v_x \cdot \Delta t $$
+
+$$ y = y_0 + v_y \cdot \Delta t $$
+
+<p>The computer program we will work with here computes these equations over and over again, updating $v_x$, $v_y$, $x$ and $y$ depending on whether the thrust is turned on or off. If the thrust is turned off then $a_x = 0$ and $\Delta v_x = 0$ and the ship just continues with the same $v_x$ velocity. With the thrust off the $v_y$ velocity will continue to change with time due to gravity, $\Delta v_y = g \, \Delta t$. 
+
+
+<p><H3>Step 0. Open up 2D planetoids in an editor</H3>
+
+<p><a href="https://editor.p5js.org/ChrisOrban/sketches/icUuKKmI7" target="_blank">Click on this link to open the 2D planetoids code in a p5.js editor</a>
+
+<p>Press play there to run the code. It should look the same as it did with the <a href="../planetoids/planetoids.html">at the end of the planetoids exercise</a>
+
+<p><H4><mark>Very Important: Log in to your account! Then click "Duplicate" so you can have your own version of the code!!!</mark></H4>
+
+<p>In the top left corner, press <img src="https://www.asc.ohio-state.edu/orban.14/physics_coding/play_button.png"> and you'll see something like this:
+
+<center>
+<p><img height=700 width=700 src="lunardescent_initial.png">
+</center>
+
+<p>If the program can detect that something is wrong with your code it will show a red <img width=15 height=15 src="https://www.asc.ohio-state.edu/orban.14/stemcoding/red_x.png"> next to that objective.
+
+<p>If the program can detect that you have completed the objective it will show a green check mark <img width=15 height=15 src="https://www.asc.ohio-state.edu/orban.14/stemcoding/check_mark.png"> next to that objective.
+
+<p>But the program is not very smart and if it can't tell whether you have completed the objective it will indicate a question mark like this <img width=15 height=15 src="https://www.asc.ohio-state.edu/orban.14/stemcoding/question_mark.png"> next to that objective.
+
+<p>By the end of this activity your goal is to have green check marks next to all the objectives like this:
+
+<center>
+<p><img width=680 height=254 src="lunardescent_final.png">
+</center>
+
+<p>The steps below will help you achieve all these objectives!
+  
+<p><H3>Step 1. Add gravity to planetoids</h3> 
+
+<p>After you <b><mark>click duplicate!</mark></b> edit the beginning of the code, add the gravitational constant for the moon. The moon's gravity is 1/6th of the earth's, so g = -9.8/6 = -1.63 m/s<sup>2</sup>
+
+<p>Add this line to near the beginning of your code:
+
+<pre>
+g = -1.63;
+</pre>
+
+<button class="btn" data-clipboard-text="g = -1.63;">
+    Copy code to clipboard
+</button>
+
+<p>Right <b>before</b> the <code>display();</code> function, add this line:
+
+<pre>
+deltaVy += g*dt;
+</pre>
+
+<button class="btn" data-clipboard-text="deltaVy += g*dt;">
+    Copy code to clipboard
+</button>
+
+<p>Note that gravity points in the $-y$ direction, so we need a minus sign in the above code to make sure down is negative (and since $g > 0$).
+
+<p>You've added gravity to our simple planetoids game! Now run the program by clicking <img src="https://processing.org/reference/environment/images/play.gif">. <a href="lunardescent_v1/lunardescent.html">The program should behave like this</a>.
+
+<p><h3>Step 2. Add the Game Over!</H3>
+
+<p>Edit your code so that it's game over if the ship falls through the bottom of the page. Since down is positive, this happens if the y value becomes larger than the height of the screen.
+
+<p>Right <b>after</b> display(); add this line:
+
+<pre>
+  if (y < 0) {
+  drawText('Game Over!',width/2,height/2);
+  exit();
+  }
+</pre>
+
+<button class="btn" data-clipboard-text="if (y < 0) {
+  drawText('Game Over!',width/2,height/2);
+  exit();
+  }">
+    Copy code to clipboard
+</button>
+
+<p>Great, now there is a way to lose the game! <a href="lunardescent_v2/lunardescent.html">The program should now behave like this</a>.
+
+<p><H3>Step 3. Add a way to win the game!</H3>
+
+<p>We need to add a way for the ship to land on the surface of the moon. 
+
+<p>Add this code right after the display(); function to draw a line at the bottom of the page:
+
+<pre>
+drawLine(0,0,width,0);
+</pre>
+
+<button class="btn" data-clipboard-text="drawLine(0,0,width,0);">
+    Copy code to clipboard
+</button>
+
+<p>If you play the game now there should be a black line on the bottom of the screen. You should test it to see if this worked. 
+
+<p>Now we need a way for the ship to sit in the surface of the moon. In real life, the surface of the moon would provide a normal force to hold up the ship. We could try to code up the normal force, but a simpler thing to do would be to make it so that if the ship gets <b>very</b> close to the bottom then the acceleration and velocity will be zero in both the x and y direction. The ship will just sit there forever.
+
+<p>Add these line right <b>before</b> the game over in draw()
+
+<pre>
+ if ( abs(y - 0.03*height)  < 0.1) {
+  deltaVx = 0;
+  deltaVy = 0;
+  vx = 0;
+  vy = 0;
+  theta = 3.141/2;
+  drawText('You Win!',width/2,height/2);			      
+  }
+</pre>
+
+<button class="btn" data-clipboard-text="
+ if ( abs(y - 0.03*height)  < 0.1) {
+  deltaVx = 0;
+  deltaVy = 0;
+  vx = 0;
+  vy = 0;
+  theta = 3.141/2;
+  drawText('You Win!',width/2,height/2);			      
+  }
+">
+    Copy code to clipboard
+</button>
+
+<p>Among other things, the above code will change the angle of the ship from 0 to $\pi/2$ radians. If you convert from radians this would be 90 degrees.
+
+<p>Note that the accelerations are set to zero, the velocities are set to zero and the angle of the rocket points straight up.
+
+<p>If you've coded up everything correctly, <a href="lunardescent_v3/lunardescent.html">the end result should behave like this</a>.
+
+
+<p><H3>Step 4. Change the initial angle!</H3>
+
+<p>There are a number of different options to customize the game. You can change the initial direction of the ship from horizontal to vertical by changing one line of your code.
+
+<p>Near the beginning of your code change this line:
+
+<pre>
+theta = 0; 
+</pre>
+to this:
+<pre>
+theta = 3.141/2;
+</pre>
+
+<p>The above code will change the angle of the ship from 0 to $\pi/2$ radians. If you convert from radians this would be 90 degrees.
+
+<!--
+<p>You may also want to have the ship start out higher up so it has further to fall. You can do this by changing initial y position in the <code>setup()</code> function. Change this from 
+<pre>
+y = height/2; 
+</pre>
+to
+<pre>
+y = height;
+</pre>
+
+<p>There are plenty of other ways to modify the game. Maybe have a limited amount of fuel, or a limited amount of time. Perhaps add mountains. Projectiles? Enable reverse thrusters? Perhaps display the numerical value of the velocity and height on screen. Something else?
+-->
+
+<p><b>Step 5. Let the ship fall to the ground! Calculate the free fall time</b>
+
+<p>If you <b>don't</b> fire the thrusters the ship will fall to the ground. Let's measure how long this takes in the program, and then use our physics knowledge to see if the measured time makes sense.
+
+<p><b>Step 5. Add a timer!</b>
+
+<p>Let's add some code to keep track of how much time has elapsed. At the beginning of the code where all the variables are initialized add this line:
+
+<pre>
+t = 0;
+</pre>
+
+<p>Somewhere after the display() function add these lines:
+
+<pre>
+t += dt;
+drawText('time = ',0.75*width,0.75*height);
+drawText(t,0.85*width,0.75*height);
+</pre>
+
+<button class="btn" data-clipboard-text="t += dt;
+drawText('time = ',0.75*width,0.75*height);
+drawText(t,0.85*width,0.75*height);">
+    Copy code to clipboard
+</button>
+
+<p>Now run the code and let the ship fall to the ground. How long does it take?
+
+<p><b>Step 5b. Use your physics knowledge to check if the free fall time is correct</b>
+
+<p>It is always a good exercise to check that your code is giving you the same answer that you expect. Crunch some numbers to see if the free fall time is correct. You'll probably want to use this equation:
+
+$$y(t) = y_i + v_{yi}t + \frac{1}{2} g t^2$$
+
+<p>where $y_i$ is the initial height, $v_{yi}$ is the initial speed and $g$ is graivitational acceleration.
+
+<p><b>Disclaimer #1:</b> Don't forget that the ship is landing on the moon! Use g = -1.63 instead of g = -9.8!
+
+<p><b>Disclaimer #2:</b> Unless you modified the code, the ship will start from y = 250 and hit the ground at y = 0
+
+<p><b>Step 6. Just for fun give the ship a random initial velocity</b>
+
+<p>You can give the ship a random velocity by changing vx and vy at the beginning of the program from this:
+
+<pre>
+  vx = 0;
+  vy = 0;
+</pre>
+
+to this:
+
+<pre>
+  vx = random(-5,5);
+  vy = 0;
+</pre>
+
+Go ahead and <b>change this code to make the game more fun</b> (5 is pretty arbitrary, what would be a more fun choice? what about giving vy a random velocity?). What did you change this part of the code to?
+
+<p><H4>Optional Challenges: SpaceX landing!</H4>
+
+<p><b>Challenge #1.</b> Just for fun, change g back to -9.8 (instead of -1.67) so that the rocket is trying to land on earth instead of the moon. You can increase the value of Fthrust if you need to. This situation is what SpaceX has to deal with when they land their rockets on a landing pad. Can you land the ship even in this situation?
+
+<p><b>Challenge #2.</b> Can you modify the code so that the rocket fires the thrusters automatically so that it lands by itself without any human guidance? This is what the computers on the spaceX rockets have to do.
+
+<p><h3><mark>How to get full credit on this programming lab!!!</mark></h3>
+
+<p><b>1. Make sure you can lose the game and win the game</b>
+
+<p>As described in steps 2 and 3
+
+<p><b>2. Make sure to change the initial angle</b>
+
+<p>Make sure to change the initial angle to 3.141/2 as described in step 4. 
+
+<p><b>3. Make sure your calculation for the free fall time agrees with the simulation</b>
+
+<p>In step 5 you will use your physics knowledge to calculate what the free fall time should be and compare it to the free fall time from the simulation. For a variety of reasons, we don't expect computer simulations to be perfectly accurate but in this case the two numbers should agree to better than 1%
+
+<p><b>4. Give the ship a random velocity</b>
+
+<p>Change the beginning of the code to give the ship a random velocity as described in Step 6.
+
+</body>
+</html>
